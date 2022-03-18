@@ -1,7 +1,8 @@
-package com.yww.stonedream
+package com.yww.stonedream.android
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.yww.stonedream.android.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
