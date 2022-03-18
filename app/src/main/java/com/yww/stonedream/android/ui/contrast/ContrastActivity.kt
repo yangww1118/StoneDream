@@ -1,5 +1,6 @@
 package com.yww.stonedream.android.ui.contrast
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -7,9 +8,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.yww.stonedream.android.R
@@ -56,17 +60,57 @@ class ContrastActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.refreshContrast(viewModel.phraseId)
+        //viewModel.refreshContrast(viewModel.phraseId)
+
+        viewModel.contrastLiveData.observe(this, Observer { result ->
+            val contrast = result.getOrNull()
+            if (contrast != null) {
+                showContrastInfo(contrast)
+            } else {
+                Toast.makeText(this, "无法成功获取词条信息", Toast.LENGTH_SHORT).show()
+                result.exceptionOrNull()?.printStackTrace()
+            }
+            swipeRefresh.isRefreshing = false
+        })
+
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary)
+        refreshContrast()
+        swipeRefresh.setOnRefreshListener {
+            refreshContrast()
+            Log.d("phrase", "after refresh phrase id:" + viewModel.phraseId)
+        }
+
+        navBtn.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+
+        drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerStateChanged(newState: Int) {}
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+            override fun onDrawerOpened(drawerView: View) {}
+            override fun onDrawerClosed(drawerView: View) {
+                val manager = getSystemService(Context.INPUT_METHOD_SERVICE)
+                as InputMethodManager
+                manager.hideSoftInputFromWindow(drawerView.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS)
+            }
+        })
+    }
+
+    fun refreshContrast() {
+        Log.d("phrase", "show phrase id:" + viewModel.phraseId)
+        viewModel.refreshContrast(viewModel.phraseId++)
+        swipeRefresh.isRefreshing = true
     }
 
     private fun showContrastInfo(contrast: Contrast) {
-        phraseName.text = viewModel.phraseName
+        //phraseName.text = viewModel.phraseName
 
         val phrase = contrast.phrase
         val compare = contrast.compare
 
         //Log.d("layout", "show the layout " + phraseName.text)
-
+        phraseName.text = phrase.name
         phraseParent.text = phrase.phrase_parent
         phraseGrandpa.text = phrase.phrase_grandpa
         phraseMemo.text = phrase.memo

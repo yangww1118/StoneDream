@@ -1,5 +1,6 @@
 package com.yww.stonedream.android.ui.phrase
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.yww.stonedream.android.MainActivity
 import com.yww.stonedream.android.R
+import com.yww.stonedream.android.ui.contrast.ContrastActivity
 import kotlinx.android.synthetic.main.fragment_phrase.*
 
 class PhraseFragment : Fragment() {
@@ -29,6 +32,18 @@ class PhraseFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        if (activity is MainActivity && viewModel.isPhraseSaved()) {
+            val phrase = viewModel.getSavedPlace()
+            val intent = Intent(context, ContrastActivity::class.java).apply {
+                putExtra("phrase_id", phrase.id)
+                putExtra("phrase_name", phrase.name)
+            }
+            startActivity(intent)
+            activity?.finish()
+            return
+        }
+
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
         adapter = PhraseAdapter(this, viewModel.phraseList)

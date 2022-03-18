@@ -1,6 +1,7 @@
 package com.yww.stonedream.android.logic
 
 import androidx.lifecycle.liveData
+import com.yww.stonedream.android.logic.dao.PhraseDao
 import com.yww.stonedream.android.logic.model.Contrast
 import com.yww.stonedream.android.logic.model.Phrase
 import com.yww.stonedream.android.logic.network.StoneDreamNetwork
@@ -56,4 +57,10 @@ object Repository {
             }
             emit(result)
         }
+
+    fun savePhrase(phrase: Phrase) = PhraseDao.savePhrase(phrase)
+
+    fun getSavedPlace() = PhraseDao.getSavedPhrase()
+
+    fun isPhraseSaved() = PhraseDao.isPhraseSaved()
 }

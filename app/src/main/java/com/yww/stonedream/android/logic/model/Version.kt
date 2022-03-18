@@ -5,7 +5,7 @@ import com.yww.stonedream.android.R
 class Version(val info: String, val icon: Int, val bg: Int)
 
 private val version = mapOf(
-    "甲戌本" to Version("甲", R.drawable.ic_clear_day, R.drawable.bg_clear_day),
+    "甲戌本" to Version("戌", R.drawable.ic_clear_day, R.drawable.bg_clear_day),
     "庚辰本" to Version("庚", R.drawable.ic_cloudy, R.drawable.bg_cloudy),
     "己卯本" to Version("己", R.drawable.ic_partly_cloud_day, R.drawable.bg_partly_cloudy_day),
     "列藏本" to Version("列", R.drawable.ic_partly_cloud_night, R.drawable.bg_partly_cloudy_night),

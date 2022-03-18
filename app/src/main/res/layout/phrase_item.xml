@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="130dp"
+    android:layout_height="wrap_content"
     android:layout_margin="12dp"
     app:cardCornerRadius="4dp">
 
@@ -29,12 +29,12 @@
             android:textSize="14sp"/>
 
         <TextView
-            android:id="@+id/phraseUrl"
+            android:id="@+id/phraseParentName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textColor="?android:attr/textColorAlertDialogListItem"
-            android:textSize="14sp"/>
+            android:textColor="?android:attr/textColorTertiary"
+            android:textSize="16sp"/>
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

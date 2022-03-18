@@ -11,14 +11,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yww.stonedream.android.R
 import com.yww.stonedream.android.logic.model.Phrase
 import com.yww.stonedream.android.ui.contrast.ContrastActivity
+import kotlinx.android.synthetic.main.activity_contrast.*
 
-class PhraseAdapter(private val fragment: Fragment, private val phraseList: List<Phrase>) :
+class PhraseAdapter(private val fragment: PhraseFragment, private val phraseList: List<Phrase>) :
     RecyclerView.Adapter<PhraseAdapter.ViewHolder>() {
 
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val phraseName: TextView = view.findViewById(R.id.phraseName)
             val phraseMemo: TextView = view.findViewById(R.id.phraseMemo)
-            val phraseUrl: TextView = view.findViewById(R.id.phraseUrl)
+            val phraseParentName: TextView = view.findViewById(R.id.phraseParentName)
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,13 +29,22 @@ class PhraseAdapter(private val fragment: Fragment, private val phraseList: List
         holder.itemView.setOnClickListener {
             val position = holder.adapterPosition
             val phrase = phraseList[position]
-            val intent = Intent(parent.context, ContrastActivity::class.java).apply {
-                putExtra("phrase_id", phrase.id)
-                putExtra("phrase_name", phrase.name)
-                //Toast.makeText(holder.itemView.context, "你点击了" + phrase.id + phrase.name, Toast.LENGTH_SHORT).show()
+            val activity = fragment.activity
+            if (activity is ContrastActivity) {
+                activity.drawerLayout.closeDrawers()
+                activity.viewModel.phraseId = phrase.id
+                activity.viewModel.phraseName = phrase.name
+                activity.refreshContrast()
+            } else {
+                val intent = Intent(parent.context, ContrastActivity::class.java).apply {
+                    putExtra("phrase_id", phrase.id)
+                    putExtra("phrase_name", phrase.name)
+                    //Toast.makeText(holder.itemView.context, "你点击了" + phrase.id + phrase.name, Toast.LENGTH_SHORT).show()
+                }
+                fragment.startActivity(intent)
+                fragment.activity?.finish()
             }
-            fragment.startActivity(intent)
-            fragment.activity?.finish()
+            fragment.viewModel.savePhrase(phrase)
         }
 
         //return ViewHolder(view)
@@ -45,7 +55,7 @@ class PhraseAdapter(private val fragment: Fragment, private val phraseList: List
         val phrase = phraseList[position]
         holder.phraseName.text = phrase.name
         holder.phraseMemo.text = phrase.memo
-        holder.phraseUrl.text = phrase.phrase_url
+        holder.phraseParentName.text = ">> ${phrase.parent_name}"
     }
 
     override fun getItemCount() = phraseList.size
